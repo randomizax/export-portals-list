@@ -2,11 +2,11 @@
 // @id             iitc-plugin-export-portals-list@randomizax
 // @name           IITC plugin: export list of portals
 // @category       Info
-// @version        0.2.0.20141205.171715
+// @version        0.3.0.20141208.012852
 // @namespace      https://github.com/jonatkins/ingress-intel-total-conversion
 // @updateURL      https://rawgit.com/randomizax/export-portals-list/latest/export-portals-list.meta.js
 // @downloadURL    https://rawgit.com/randomizax/export-portals-list/latest/export-portals-list.user.js
-// @description    [jonatkins-2014-12-05-171715] Display exportable list of portals as TSV(CSV).
+// @description    [jonatkins-2014-12-08-012852] Display exportable list of portals as TSV(CSV).
 // @include        https://www.ingress.com/intel*
 // @include        http://www.ingress.com/intel*
 // @match          https://www.ingress.com/intel*
@@ -64,13 +64,18 @@ function wrapper(plugin_info) {
     ap2: "#ff52e7",
     ap3: "#9e5aff",
     ap4: "#d74545",
-  }
+  };
 
   window.plugin.eportalslist.fields = [
     {
       title: "GUID",
       value: function(portal) { return portal.options.guid; },
       sortValue: function(value, portal) { return value; },
+      format: function(cell, portal, value) {
+        $(cell)
+          .text(value)
+          .addClass("guid");
+      },
     },
     {
       title: "Name",
@@ -84,120 +89,58 @@ function wrapper(plugin_info) {
     },
     {
       title: "Orn",
-      value: function(portal) { return portal.options.data.ornaments.join(',') },
+      value: function(portal) { return portal.options.data.ornaments.join(','); },
       sortValue: function(value, portal) { return value == '' ? 'zzzzz' : value; },
       format: function(cell, portal, value) {
-        color = CLUSTER_COLORS[value]
-        $(cell).append(value)
+        color = CLUSTER_COLORS[value];
+        $(cell).append(value);
         if (color) {
-          $(cell).css('background-color', color)
+          $(cell).css('background-color', color);
         }
       },
     },
     {
-      title: "L",
+      title: "In",
+      value: function(portal) { return window.plugin.eportalslist.enclosing(portal); },
+    },
+    {
+      title: "Lat",
+      value: function(portal) { return portal.getLatLng().lat; },
+      sortValue: function(value, portal) { return value; },
+    },
+    {
+      title: "Long",
+      value: function(portal) { return portal.getLatLng().lng; },
+      sortValue: function(value, portal) { return value; },
+    },
+    {
+      title: "I",
       value: function(portal) {
         var l = plugin.portalslist.getPortalLink(portal);
         return l.href;
       },
       sortValue: function(value, portal) { return value.toLowerCase(); },
       format: function(cell, portal, value) {
-        cell.textContent = "L";
+        var link = document.createElement("a");
+        link.textContent = "I";
+        link.href = value;
+        $(cell).append(link);
       },
     },
     {
-      title: "Latitude",
-      value: function(portal) { return portal.getLatLng().lat; },
-      sortValue: function(value, portal) { return value; },
+      title: "G",
+      value: function(portal) {
+        return "https://www.google.co.jp/maps?q=" +
+          portal.getLatLng().lat + "," + portal.getLatLng().lng;
+      },
+      sortValue: function(value, portal) { return value.toLowerCase(); },
+      format: function(cell, portal, value) {
+        var link = document.createElement("a");
+        link.textContent = "G";
+        link.href = value;
+        $(cell).append(link);
+      },
     },
-    {
-      title: "Longitude",
-      value: function(portal) { return portal.getLatLng().lng; },
-      sortValue: function(value, portal) { return value; },
-    },
-    // {
-    //   title: "Level",
-    //   value: function(portal) { return portal.options.data.level; },
-    //   format: function(cell, portal, value) {
-    //     $(cell)
-    //       .css('background-color', COLORS_LVL[value])
-    //       .text('L' + value);
-    //   },
-    //   defaultOrder: -1,
-    // },
-    // {
-    //   title: "Team",
-    //   value: function(portal) { return portal.options.team; },
-    //   format: function(cell, portal, value) {
-    //     $(cell).text(['NEU', 'RES', 'ENL'][value]);
-    //   }
-    // },
-    // {
-    //   title: "Health",
-    //   value: function(portal) { return portal.options.data.health; },
-    //   sortValue: function(value, portal) { return portal.options.team===TEAM_NONE ? -1 : value; },
-    //   format: function(cell, portal, value) {
-    //     $(cell)
-    //       .addClass("alignR")
-    //       .text(portal.options.team===TEAM_NONE ? '-' : value+'%');
-    //   }
-    // },
-    // {
-    //   title: "Res",
-    //   value: function(portal) { return portal.options.data.resCount; },
-    //   format: function(cell, portal, value) {
-    //     $(cell)
-    //       .addClass("alignR")
-    //       .text(value);
-    //   }
-    // },
-    // {
-    //   title: "Links",
-    //   value: function(portal) { return window.getPortalLinks(portal.options.guid); },
-    //   sortValue: function(value, portal) { return value.in.length + value.out.length; },
-    //   format: function(cell, portal, value) {
-    //     $(cell)
-    //       .addClass("alignR")
-    //       .addClass('help')
-    //       .attr('title', 'In:\t' + value.in.length + '\nOut:\t' + value.out.length)
-    //       .text(value.in.length+value.out.length);
-    //   }
-    // },
-    // {
-    //   title: "Fields",
-    //   value: function(portal) { return getPortalFieldsCount(portal.options.guid) },
-    //   format: function(cell, portal, value) {
-    //     $(cell)
-    //       .addClass("alignR")
-    //       .text(value);
-    //   }
-    // },
-    // {
-    //   title: "AP",
-    //   value: function(portal) {
-    //     var links = window.getPortalLinks(portal.options.guid);
-    //     var fields = getPortalFieldsCount(portal.options.guid);
-    //     return portalApGainMaths(portal.options.data.resCount, links.in.length+links.out.length, fields);
-    //   },
-    //   sortValue: function(value, portal) { return value.enemyAp; },
-    //   format: function(cell, portal, value) {
-    //     var title = '';
-    //     if (PLAYER.team == portal.options.data.team) {
-    //       title += 'Friendly AP:\t'+value.friendlyAp+'\n'
-    //              + '- deploy '+(8-portal.options.data.resCount)+' resonator(s)\n'
-    //              + '- upgrades/mods unknown\n';
-    //     }
-    //     title += 'Enemy AP:\t'+value.enemyAp+'\n'
-    //            + '- Destroy AP:\t'+value.destroyAp+'\n'
-    //            + '- Capture AP:\t'+value.captureAp;
-
-    //     $(cell)
-    //       .addClass("alignR")
-    //       .addClass('help')
-    //       .prop('title', title)
-    //       .html(digits(value.enemyAp));
-    //   }
-    // },
   ];
 
   //fill the listPortals array with portals avaliable on the map (level filtered portals will not appear in the table)
@@ -236,7 +179,7 @@ function wrapper(plugin_info) {
       var cell = row.insertCell(-1);
       cell.className = 'alignR';
 
-      var tsvColumns = []
+      var tsvColumns = [];
       window.plugin.eportalslist.fields.forEach(function(field, i) {
         cell = row.insertCell(-1);
 
@@ -251,7 +194,7 @@ function wrapper(plugin_info) {
           cell.textContent = value;
         }
 
-        value = value.replace(/[\n\t]/g, "");
+        try { value = value.replace(/[\n\t]/g, ""); } catch(e) {}
         tsvColumns.push(field.tsv ? field.tsv(portal, value) : value);
       });
 
@@ -260,7 +203,39 @@ function wrapper(plugin_info) {
     });
 
     return retval;
-  }
+  };
+
+  window.plugin.eportalslist.portalInPolygon = function portalInPolygon( polygon, portal ) {
+    var poly = polygon.getLatLngs();
+    var pt = portal.getLatLng();
+
+    for(var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i) {
+      if (((poly[i].lat <= pt.lat && pt.lat < poly[j].lat) ||
+           (poly[j].lat <= pt.lat && pt.lat < poly[i].lat)) &&
+          (pt.lng < (poly[j].lng - poly[i].lng) * (pt.lat - poly[i].lat) / (poly[j].lat - poly[i].lat) + poly[i].lng)) {
+        c = !c;
+      }
+    }
+    return c;
+  };
+
+  window.plugin.eportalslist.enclosing = function(portal) {
+    var objs = [];
+    var i = 0;
+    window.plugin.drawTools.drawnItems.eachLayer( function( layer ) {
+      i++;
+      if ( window.plugin.eportalslist.portalInPolygon( layer, portal ) ) {
+        if (layer instanceof L.GeodesicCircle || layer instanceof L.Circle) {
+          objs.push("C" + i);
+        } else if (layer instanceof L.GeodesicPolygon || layer instanceof L.Polygon) {
+          objs.push("P" + i);
+        } else if (layer instanceof L.GeodesicPolyline || layer instanceof L.Polyline) {
+          objs.push("L" + i);
+        }
+      }
+    });
+    return objs.join(",");
+  };
 
   window.plugin.eportalslist.displayPL = function() {
     var list;
@@ -275,20 +250,20 @@ function wrapper(plugin_info) {
       list = window.plugin.eportalslist.portalTable(window.plugin.eportalslist.sortBy, window.plugin.eportalslist.sortOrder,window.plugin.eportalslist.filter);
     } else {
       list = $('<table class="noPortals"><tr><td>Nothing to show!</td></tr></table>');
-    };
+    }
 
     if(window.useAndroidPanes()) {
-      $('<div id="portalslist" class="mobile">').append(list).appendTo(document.body);
+      $('<div id="eportalslist" class="mobile">').append(list).appendTo(document.body);
     } else {
       dialog({
-        html: $('<div id="portalslist">').append(list),
+        html: $('<div id="eportalslist">').append(list),
         dialogClass: 'ui-dialog-portalslist',
         title: 'Portal list: ' + window.plugin.eportalslist.listPortals.length + ' ' + (window.plugin.eportalslist.listPortals.length == 1 ? 'portal' : 'portals'),
         id: 'portal-list',
         width: 700
       });
     }
-  }
+  };
 
   window.plugin.eportalslist.portalTable = function(sortBy, sortOrder, filter) {
     // save the sortBy/sortOrder/filter
@@ -315,9 +290,9 @@ function wrapper(plugin_info) {
 
     if(filter !== 0) {
       portals = portals.filter(function(obj) {
-        return filter < 0
-          ? obj.portal.options.team+1 != -filter
-          : obj.portal.options.team+1 == filter;
+        return (filter < 0
+                ? obj.portal.options.team+1 != -filter
+                : obj.portal.options.team+1 == filter);
       });
     }
 
@@ -330,46 +305,6 @@ function wrapper(plugin_info) {
     tarea.value = window.plugin.eportalslist.tsvPortals.join("");
 
     container.append('<div class="disclaimer">Copy/paste the text above into a TSV file.</div>');
-
-    // table = document.createElement('table');
-    // table.className = 'filter';
-    // container.append(table);
-
-    // row = table.insertRow(-1);
-
-    // var length = window.plugin.eportalslist.listPortals.length;
-
-    // ["All", "Neutral", "Resistance", "Enlightened"].forEach(function(label, i) {
-    //     cell = row.appendChild(document.createElement('th'));
-    //     cell.className = 'filter' + label.substr(0, 3);
-    //     cell.textContent = label+':';
-    //     cell.title = 'Show only portals of this color';
-    //     $(cell).click(function() {
-    //         $('#portalslist').empty().append(window.plugin.eportalslist.portalTable(sortBy, sortOrder, i));
-    //     });
-
-
-    //     cell = row.insertCell(-1);
-    //     cell.className = 'filter' + label.substr(0, 3);
-    //     if(i != 0) cell.title = 'Hide portals of this color';
-    //     $(cell).click(function() {
-    //         $('#portalslist').empty().append(window.plugin.eportalslist.portalTable(sortBy, sortOrder, -i));
-    //     });
-
-    //     switch(i-1) {
-    //     case -1:
-    //         cell.textContent = length;
-    //         break;
-    //     case 0:
-    //         cell.textContent = window.plugin.eportalslist.neuP + ' (' + Math.round(window.plugin.eportalslist.neuP/length*100) + '%)';
-    //         break;
-    //     case 1:
-    //         cell.textContent = window.plugin.eportalslist.resP + ' (' + Math.round(window.plugin.eportalslist.resP/length*100) + '%)';
-    //         break;
-    //     case 2:
-    //         cell.textContent = window.plugin.eportalslist.enlP + ' (' + Math.round(window.plugin.eportalslist.enlP/length*100) + '%)';
-    //     }
-    // });
 
     table = document.createElement('table');
     table.className = 'portals';
@@ -398,13 +333,13 @@ function wrapper(plugin_info) {
             order = field.defaultOrder < 0 ? -1 : 1;
           }
 
-          $('#portalslist').empty().append(window.plugin.eportalslist.portalTable(i, order, filter));
+          $('#eportalslist').empty().append(window.plugin.eportalslist.portalTable(i, order, filter));
         });
       }
     });
 
     portals.forEach(function(obj, i) {
-      var row = obj.row
+      var row = obj.row;
       if(row.parentNode) row.parentNode.removeChild(row);
 
       row.cells[0].textContent = i+1;
@@ -412,11 +347,8 @@ function wrapper(plugin_info) {
       table.appendChild(row);
     });
 
-    // container.append('<div class="disclaimer">Click on portals table headers to sort by that column. '
-    //                  + 'Click on <b>All, Neutral, Resistance, Enlightened</b> to only show portals owner by that faction or on the number behind the factions to show all but those portals.</div>');
-
     return container;
-  }
+  };
 
   // portal link - single click: select portal
   //               double click: zoom to and select portal
@@ -440,13 +372,13 @@ function wrapper(plugin_info) {
       return false;
     });
     return link;
-  }
+  };
 
   window.plugin.eportalslist.onPaneChanged = function(pane) {
     if(pane == "plugin-portalslist")
       window.plugin.eportalslist.displayPL();
     else
-      $("#portalslist").remove()
+      $("#eportalslist").remove();
   };
 
   var setup =  function() {
@@ -459,10 +391,10 @@ function wrapper(plugin_info) {
 
     $("<style>")
       .prop("type", "text/css")
-      .html("#portalslist.mobile {\n  background: transparent;\n  border: 0 none !important;\n  height: 100% !important;\n  width: 100% !important;\n  left: 0 !important;\n  top: 0 !important;\n  position: absolute;\n  overflow: auto;\n}\n\n#portalslist table {\n  margin-top: 5px;\n  border-collapse: collapse;\n  empty-cells: show;\n  width: 100%;\n  clear: both;\n}\n\n#portalslist table td, #portalslist table th {\n  background-color: #1b415e;\n  border-bottom: 1px solid #0b314e;\n  color: white;\n  padding: 3px;\n}\n\n#portalslist table th {\n  text-align: center;\n}\n\n#portalslist table .alignR {\n  text-align: right;\n}\n\n#portalslist table.portals td {\n  white-space: nowrap;\n}\n\n#portalslist table th.sortable {\n  cursor: pointer;\n}\n\n#portalslist table .portalTitle {\n  min-width: 120px !important;\n  max-width: 240px !important;\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n}\n\n#portalslist .sorted {\n  color: #FFCE00;\n}\n\n#portalslist table.filter {\n  table-layout: fixed;\n  cursor: pointer;\n  border-collapse: separate;\n  border-spacing: 1px;\n}\n\n#portalslist table.filter th {\n  text-align: left;\n  padding-left: 0.3em;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n\n#portalslist table.filter td {\n  text-align: right;\n  padding-right: 0.3em;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n\n#portalslist .filterNeu {\n  background-color: #666;\n}\n\n#portalslist table tr.res td, #portalslist .filterRes {\n  background-color: #005684;\n}\n\n#portalslist table tr.enl td, #portalslist .filterEnl {\n  background-color: #017f01;\n}\n\n#portalslist table tr.none td {\n  background-color: #000;\n}\n\n#portalslist .disclaimer {\n  margin-top: 10px;\n  font-size: 10px;\n}\n\n#portalslist.mobile table.filter tr {\n  display: block;\n  text-align: center;\n}\n#portalslist.mobile table.filter th, #portalslist.mobile table.filter td {\n  display: inline-block;\n  width: 22%;\n}\n\n")
+      .html("#eportalslist.mobile {\n  background: transparent;\n  border: 0 none !important;\n  height: 100% !important;\n  width: 100% !important;\n  left: 0 !important;\n  top: 0 !important;\n  position: absolute;\n  overflow: auto;\n}\n\n#eportalslist table {\n  margin-top: 5px;\n  border-collapse: collapse;\n  empty-cells: show;\n  width: 100%;\n  clear: both;\n}\n\n#eportalslist table td, #eportalslist table th {\n  background-color: #1b415e;\n  border-bottom: 1px solid #0b314e;\n  color: white;\n  padding: 3px;\n}\n\n#eportalslist table th {\n  text-align: center;\n}\n\n#eportalslist table .alignR {\n  text-align: right;\n}\n\n#eportalslist table.portals td {\n  white-space: nowrap;\n}\n\n#eportalslist table th.sortable {\n  cursor: pointer;\n}\n\n#eportalslist table .guid {\n  min-width: 20px !important;\n  max-width: 40px !important;\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: clip;\n}\n\n#eportalslist table .portalTitle {\n  min-width: 80px !important;\n  max-width: 120px !important;\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n}\n\n#eportalslist .sorted {\n  color: #FFCE00;\n}\n\n#eportalslist table.filter {\n  table-layout: fixed;\n  cursor: pointer;\n  border-collapse: separate;\n  border-spacing: 1px;\n}\n\n#eportalslist table.filter th {\n  text-align: left;\n  padding-left: 0.3em;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n\n#eportalslist table.filter td {\n  text-align: right;\n  padding-right: 0.3em;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n\n#eportalslist .filterNeu {\n  background-color: #666;\n}\n\n#eportalslist table tr.res td, #eportalslist .filterRes {\n  background-color: #005684;\n}\n\n#eportalslist table tr.enl td, #eportalslist .filterEnl {\n  background-color: #017f01;\n}\n\n#eportalslist table tr.none td {\n  background-color: #000;\n}\n\n#eportalslist .disclaimer {\n  margin-top: 10px;\n  font-size: 10px;\n}\n\n#eportalslist.mobile table.filter tr {\n  display: block;\n  text-align: center;\n}\n#eportalslist.mobile table.filter th, #eportalslist.mobile table.filter td {\n  display: inline-block;\n  width: 22%;\n}\n\n")
       .appendTo("head");
 
-  }
+  };
 
   // PLUGIN END //////////////////////////////////////////////////////////
 
