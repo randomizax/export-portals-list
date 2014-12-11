@@ -2,11 +2,11 @@
 // @id             iitc-plugin-export-portals-list@randomizax
 // @name           IITC plugin: export list of portals
 // @category       Info
-// @version        0.3.0.20141208.012852
+// @version        0.3.1.20141212.004952
 // @namespace      https://github.com/jonatkins/ingress-intel-total-conversion
 // @updateURL      https://rawgit.com/randomizax/export-portals-list/latest/export-portals-list.meta.js
 // @downloadURL    https://rawgit.com/randomizax/export-portals-list/latest/export-portals-list.user.js
-// @description    [jonatkins-2014-12-08-012852] Display exportable list of portals as TSV(CSV).
+// @description    [jonatkins-2014-12-12-004952] Display exportable list of portals as TSV(CSV).
 // @include        https://www.ingress.com/intel*
 // @include        http://www.ingress.com/intel*
 // @match          https://www.ingress.com/intel*
@@ -22,7 +22,7 @@ function wrapper(plugin_info) {
   //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
   //(leaving them in place might break the 'About IITC' page or break update checks)
   //#//plugin_info.buildName = 'jonatkins';
-  //#//plugin_info.dateTimeVersion = '20141006.150241';
+  //#//plugin_info.dateTimeVersion = '20141212.004952';
   //#//plugin_info.pluginId = 'export-portals-list';
   //END PLUGIN AUTHORS NOTE
 
@@ -130,7 +130,7 @@ function wrapper(plugin_info) {
     {
       title: "G",
       value: function(portal) {
-        return "https://www.google.co.jp/maps?q=" +
+        return "https://maps.google.com/maps?q=" +
           portal.getLatLng().lat + "," + portal.getLatLng().lng;
       },
       sortValue: function(value, portal) { return value.toLowerCase(); },
