@@ -2,11 +2,11 @@
 // @id             iitc-plugin-export-portals-list@randomizax
 // @name           IITC plugin: export list of portals
 // @category       Info
-// @version        0.3.1.20141212.004952
+// @version        0.3.2.20141212.011533
 // @namespace      https://github.com/jonatkins/ingress-intel-total-conversion
 // @updateURL      https://rawgit.com/randomizax/export-portals-list/latest/export-portals-list.meta.js
 // @downloadURL    https://rawgit.com/randomizax/export-portals-list/latest/export-portals-list.user.js
-// @description    [jonatkins-2014-12-12-004952] Display exportable list of portals as TSV(CSV).
+// @description    [jonatkins-2014-12-12-011533] Display exportable list of portals as TSV(CSV).
 // @include        https://www.ingress.com/intel*
 // @include        http://www.ingress.com/intel*
 // @match          https://www.ingress.com/intel*
@@ -83,7 +83,7 @@ function wrapper(plugin_info) {
       sortValue: function(value, portal) { return value.toLowerCase(); },
       format: function(cell, portal, value) {
         $(cell)
-          .append(plugin.portalslist.getPortalLink(portal))
+          .append(plugin.eportalslist.getPortalLink(portal))
           .addClass("portalTitle");
       },
     },
@@ -116,7 +116,7 @@ function wrapper(plugin_info) {
     {
       title: "I",
       value: function(portal) {
-        var l = plugin.portalslist.getPortalLink(portal);
+        var l = plugin.eportalslist.getPortalLink(portal);
         return l.href;
       },
       sortValue: function(value, portal) { return value.toLowerCase(); },
