@@ -2,11 +2,11 @@
 // @id             iitc-plugin-export-portals-list@randomizax
 // @name           IITC plugin: export list of portals
 // @category       Info
-// @version        0.3.3.20150131.154252
+// @version        0.3.4.20150321.32736
 // @namespace      https://github.com/jonatkins/ingress-intel-total-conversion
 // @updateURL      https://rawgit.com/randomizax/export-portals-list/latest/export-portals-list.meta.js
 // @downloadURL    https://rawgit.com/randomizax/export-portals-list/latest/export-portals-list.user.js
-// @description    [randomizax-2015-01-31-154252] Display exportable list of portals as TSV(CSV).
+// @description    [randomizax-2015-03-21-032736] Display exportable list of portals as TSV(CSV).
 // @include        https://www.ingress.com/intel*
 // @include        http://www.ingress.com/intel*
 // @match          https://www.ingress.com/intel*
@@ -22,7 +22,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 // plugin_info.buildName = 'randomizax';
-// plugin_info.dateTimeVersion = '20150131.154252';
+// plugin_info.dateTimeVersion = '20150321.32736';
 // plugin_info.pluginId = 'export-portals-list';
 //END PLUGIN AUTHORS NOTE
 
@@ -224,13 +224,18 @@ window.plugin.eportalslist.enclosing = function(portal) {
   var i = 0;
   window.plugin.drawTools.drawnItems.eachLayer( function( layer ) {
     i++;
-    if ( window.plugin.eportalslist.portalInPolygon( layer, portal ) ) {
-      if (layer instanceof L.GeodesicCircle || layer instanceof L.Circle) {
-        objs.push("C" + i);
-      } else if (layer instanceof L.GeodesicPolygon || layer instanceof L.Polygon) {
-        objs.push("P" + i);
-      } else if (layer instanceof L.GeodesicPolyline || layer instanceof L.Polyline) {
-        objs.push("L" + i);
+    if (layer instanceof L.GeodesicPolygon ||
+        layer instanceof L.Polygon ||
+        layer instanceof L.GeodesicPolyline ||
+        layer instanceof L.Polyline) {
+      if ( window.plugin.eportalslist.portalInPolygon( layer, portal ) ) {
+        if (layer instanceof L.GeodesicCircle || layer instanceof L.Circle) {
+          objs.push("C" + i);
+        } else if (layer instanceof L.GeodesicPolygon || layer instanceof L.Polygon) {
+          objs.push("P" + i);
+        } else if (layer instanceof L.GeodesicPolyline || layer instanceof L.Polyline) {
+          objs.push("L" + i);
+        }
       }
     }
   });

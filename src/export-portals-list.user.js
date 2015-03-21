@@ -2,7 +2,7 @@
 // @id             iitc-plugin-export-portals-list@randomizax
 // @name           IITC plugin: export list of portals
 // @category       Info
-// @version        0.3.3.@@DATETIMEVERSION@@
+// @version        0.3.4.@@DATETIMEVERSION@@
 // @namespace      https://github.com/jonatkins/ingress-intel-total-conversion
 // @updateURL      @@UPDATEURL@@
 // @downloadURL    @@DOWNLOADURL@@
@@ -212,13 +212,18 @@ window.plugin.eportalslist.enclosing = function(portal) {
   var i = 0;
   window.plugin.drawTools.drawnItems.eachLayer( function( layer ) {
     i++;
-    if ( window.plugin.eportalslist.portalInPolygon( layer, portal ) ) {
-      if (layer instanceof L.GeodesicCircle || layer instanceof L.Circle) {
-        objs.push("C" + i);
-      } else if (layer instanceof L.GeodesicPolygon || layer instanceof L.Polygon) {
-        objs.push("P" + i);
-      } else if (layer instanceof L.GeodesicPolyline || layer instanceof L.Polyline) {
-        objs.push("L" + i);
+    if (layer instanceof L.GeodesicPolygon ||
+        layer instanceof L.Polygon ||
+        layer instanceof L.GeodesicPolyline ||
+        layer instanceof L.Polyline) {
+      if ( window.plugin.eportalslist.portalInPolygon( layer, portal ) ) {
+        if (layer instanceof L.GeodesicCircle || layer instanceof L.Circle) {
+          objs.push("C" + i);
+        } else if (layer instanceof L.GeodesicPolygon || layer instanceof L.Polygon) {
+          objs.push("P" + i);
+        } else if (layer instanceof L.GeodesicPolyline || layer instanceof L.Polyline) {
+          objs.push("L" + i);
+        }
       }
     }
   });
