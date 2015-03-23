@@ -2,7 +2,7 @@
 // @id             iitc-plugin-export-portals-list@randomizax
 // @name           IITC plugin: export list of portals
 // @category       Info
-// @version        0.3.4.@@DATETIMEVERSION@@
+// @version        0.4.0.@@DATETIMEVERSION@@
 // @namespace      https://github.com/jonatkins/ingress-intel-total-conversion
 // @updateURL      @@UPDATEURL@@
 // @downloadURL    @@DOWNLOADURL@@
@@ -129,6 +129,16 @@ window.plugin.eportalslist.fields = [
       $(cell).append(link);
     },
   },
+  {
+    title: "Kyoto",
+    value: function(portal) {
+      if (window.plugin.grid2 && window.plugin.grid2.portalNumber2) {
+        return window.plugin.grid2.portalNumber2[portal.options.guid] || '';
+      } else {
+        return "";
+      }
+    },
+  }
 ];
 
 //fill the listPortals array with portals avaliable on the map (level filtered portals will not appear in the table)
