@@ -2,11 +2,11 @@
 // @id             iitc-plugin-export-portals-list@randomizax
 // @name           IITC plugin: export list of portals
 // @category       Info
-// @version        0.4.0.20150323.51903
+// @version        0.5.0.20150627.105413
 // @namespace      https://github.com/jonatkins/ingress-intel-total-conversion
 // @updateURL      https://rawgit.com/randomizax/export-portals-list/latest/export-portals-list.meta.js
 // @downloadURL    https://rawgit.com/randomizax/export-portals-list/latest/export-portals-list.user.js
-// @description    [randomizax-2015-03-23-051903] Display exportable list of portals as TSV(CSV).
+// @description    [randomizax-2015-06-27-105413] Display exportable list of portals as TSV(CSV).
 // @include        https://www.ingress.com/intel*
 // @include        http://www.ingress.com/intel*
 // @match          https://www.ingress.com/intel*
@@ -22,7 +22,7 @@ if(typeof window.plugin !== 'function') window.plugin = function() {};
 //PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
 //(leaving them in place might break the 'About IITC' page or break update checks)
 // plugin_info.buildName = 'randomizax';
-// plugin_info.dateTimeVersion = '20150323.51903';
+// plugin_info.dateTimeVersion = '20150627.105413';
 // plugin_info.pluginId = 'export-portals-list';
 //END PLUGIN AUTHORS NOTE
 
@@ -142,13 +142,9 @@ window.plugin.eportalslist.fields = [
     },
   },
   {
-    title: "Kyoto",
+    title: "T",
     value: function(portal) {
-      if (window.plugin.grid2 && window.plugin.grid2.portalNumber2) {
-        return window.plugin.grid2.portalNumber2[portal.options.guid] || '';
-      } else {
-        return "";
-      }
+      return portal.options.data.team;
     },
   }
 ];

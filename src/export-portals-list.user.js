@@ -2,7 +2,7 @@
 // @id             iitc-plugin-export-portals-list@randomizax
 // @name           IITC plugin: export list of portals
 // @category       Info
-// @version        0.4.0.@@DATETIMEVERSION@@
+// @version        0.5.0.@@DATETIMEVERSION@@
 // @namespace      https://github.com/jonatkins/ingress-intel-total-conversion
 // @updateURL      @@UPDATEURL@@
 // @downloadURL    @@DOWNLOADURL@@
@@ -130,13 +130,9 @@ window.plugin.eportalslist.fields = [
     },
   },
   {
-    title: "Kyoto",
+    title: "T",
     value: function(portal) {
-      if (window.plugin.grid2 && window.plugin.grid2.portalNumber2) {
-        return window.plugin.grid2.portalNumber2[portal.options.guid] || '';
-      } else {
-        return "";
-      }
+      return portal.options.data.team;
     },
   }
 ];
