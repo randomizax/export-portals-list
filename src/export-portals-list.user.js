@@ -2,15 +2,19 @@
 // @id             iitc-plugin-export-portals-list@randomizax
 // @name           IITC plugin: export list of portals
 // @category       Info
-// @version        0.5.0.@@DATETIMEVERSION@@
+// @version        1.0.0.@@DATETIMEVERSION@@
 // @namespace      https://github.com/jonatkins/ingress-intel-total-conversion
 // @updateURL      @@UPDATEURL@@
 // @downloadURL    @@DOWNLOADURL@@
 // @description    [@@BUILDNAME@@-@@BUILDDATE@@] Display exportable list of portals as TSV(CSV).
 // @include        https://www.ingress.com/intel*
 // @include        http://www.ingress.com/intel*
+// @include        https://intel.ingress.com/intel*
+// @include        http://intel.ingress.com/intel*
 // @match          https://www.ingress.com/intel*
 // @match          http://www.ingress.com/intel*
+// @match          https://intel.ingress.com/intel*
+// @match          http://intel.ingress.com/intel*
 // @grant          none
 // ==/UserScript==
 
